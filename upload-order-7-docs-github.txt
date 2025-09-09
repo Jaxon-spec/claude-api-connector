@@ -1,0 +1,387 @@
+# CHANGELOG.md
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.0.0] - 2025-01-09
+
+### Added
+- Initial release of Claude API Connector
+- Universal API integration framework for Claude AI
+- Support for multiple authentication methods (Bearer, API Key, Basic, Custom)
+- Async/await operations for high performance
+- Rate limiting and retry logic with exponential backoff
+- Conversation management with message history
+- Batch processing capabilities for multiple endpoints
+- Custom data processing pipelines
+- Comprehensive error handling and logging
+- Working examples for Weather, GitHub, and custom APIs
+- Full test suite with pytest
+- Professional documentation with Sphinx
+- Docker containerization support
+- CI/CD pipeline with GitHub Actions
+
+### Features
+- **Universal API Support**: Connect to any REST API with minimal configuration
+- **Claude Integration**: Built-in AsyncAnthropic client for optimal performance
+- **Security**: Secure API key management and request validation
+- **Performance**: Concurrent request handling with configurable limits
+- **Flexibility**: Custom data processors and extensible architecture
+- **Reliability**: Comprehensive error handling with specific exception types
+
+---
+
+# CONTRIBUTING.md
+# Contributing to Claude API Connector
+
+We welcome contributions to the Claude API Connector! This document provides guidelines for contributing to the project.
+
+## Development Setup
+
+1. **Fork and Clone**:
+   ```bash
+   git clone https://github.com/theRealDanB/claude-api-connector.git
+   cd claude-api-connector
+   ```
+
+2. **Create Virtual Environment**:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. **Install Dependencies**:
+   ```bash
+   pip install -r requirements-dev.txt
+   pip install -e .
+   ```
+
+4. **Install Pre-commit Hooks**:
+   ```bash
+   pre-commit install
+   ```
+
+## Development Workflow
+
+### Code Style
+
+We use several tools to maintain code quality:
+
+- **Black** for code formatting
+- **Flake8** for linting
+- **MyPy** for type checking
+- **isort** for import sorting
+
+Run all formatting tools:
+```bash
+make format
+```
+
+Run linting:
+```bash
+make lint
+```
+
+### Testing
+
+We use pytest for testing. Write tests for any new functionality.
+
+Run tests:
+```bash
+make test
+```
+
+### Documentation
+
+Update documentation for any new features:
+
+- Add docstrings to all public functions and classes
+- Update relevant documentation files
+- Add examples for new functionality
+
+## Contribution Guidelines
+
+### Pull Request Process
+
+1. **Create a Feature Branch**:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+2. **Make Your Changes**:
+   - Write clean, well-documented code
+   - Add tests for new functionality
+   - Update documentation as needed
+
+3. **Test Your Changes**:
+   ```bash
+   make test
+   make lint
+   ```
+
+4. **Commit Your Changes**:
+   ```bash
+   git add .
+   git commit -m "Add feature: your feature description"
+   ```
+
+5. **Push and Create PR**:
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+
+### Code Guidelines
+
+1. **Type Hints**: Use type hints for all function parameters and return values
+2. **Docstrings**: Follow Google-style docstrings
+3. **Error Handling**: Handle errors gracefully with appropriate exceptions
+4. **Async/Await**: Use async/await for I/O operations
+5. **Logging**: Use the logging module instead of print statements
+
+Thank you for contributing to Claude API Connector!
+
+---
+
+# .github/workflows/ci.yml
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8, 3.9, "3.10", "3.11"]
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+        pip install -e .
+    
+    - name: Lint with flake8
+      run: |
+        flake8 claude_api_connector/ tests/ --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 claude_api_connector/ tests/ --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
+    
+    - name: Type check with mypy
+      run: |
+        mypy claude_api_connector/
+    
+    - name: Test with pytest
+      run: |
+        pytest tests/ --cov=claude_api_connector --cov-report=xml
+
+---
+
+# .github/ISSUE_TEMPLATE/bug_report.md
+---
+name: Bug report
+about: Create a report to help us improve
+title: '[BUG] '
+labels: bug
+assignees: ''
+---
+
+**Describe the bug**
+A clear and concise description of what the bug is.
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Configure API with '...'
+2. Call method '....'
+3. Pass parameters '....'
+4. See error
+
+**Expected behavior**
+A clear and concise description of what you expected to happen.
+
+**Code Example**
+```python
+# Minimal code example that reproduces the issue
+from claude_api_connector import ClaudeConnector, APIConfig
+
+# Your code here
+```
+
+**Error Message**
+```
+Full error traceback here
+```
+
+**Environment:**
+- OS: [e.g. Ubuntu 20.04, macOS 12.0, Windows 10]
+- Python version: [e.g. 3.9.7]
+- Claude API Connector version: [e.g. 1.0.0]
+
+**API Information:**
+- API you're trying to connect to: [e.g. OpenWeatherMap, GitHub]
+- Authentication method: [e.g. Bearer token, API key]
+
+**Additional context**
+Add any other context about the problem here.
+
+---
+
+# .github/ISSUE_TEMPLATE/feature_request.md
+---
+name: Feature request
+about: Suggest an idea for this project
+title: '[FEATURE] '
+labels: enhancement
+assignees: ''
+---
+
+**Is your feature request related to a problem? Please describe.**
+A clear and concise description of what the problem is.
+
+**Describe the solution you'd like**
+A clear and concise description of what you want to happen.
+
+**Use Case**
+Describe the specific use case for this feature. How would you use it?
+
+**Code Example**
+```python
+# Show how you'd like to use this feature
+from claude_api_connector import ClaudeConnector
+
+# Your ideal API here
+```
+
+**API Integration**
+If this is related to a specific API:
+- API name: [e.g. Slack, Discord, Shopify]
+- API documentation: [link to API docs]
+- Authentication method: [e.g. OAuth, API key]
+
+**Additional context**
+Add any other context about the feature request here.
+
+---
+
+# .github/PULL_REQUEST_TEMPLATE.md
+## Description
+
+Brief description of the changes in this PR.
+
+## Type of Change
+
+- [ ] Bug fix (non-breaking change which fixes an issue)
+- [ ] New feature (non-breaking change which adds functionality)
+- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] Documentation update
+
+## Changes Made
+
+- [ ] Added/modified core functionality
+- [ ] Added/updated tests
+- [ ] Updated documentation
+- [ ] Added example usage
+
+## Testing
+
+- [ ] All existing tests pass
+- [ ] Added tests for new functionality
+- [ ] Manual testing performed
+
+## Checklist
+
+- [ ] Code follows the project's style guidelines
+- [ ] Self-review of the code has been performed
+- [ ] Changes generate no new warnings
+
+## Related Issues
+
+Closes #(issue number)
+
+---
+
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-merge-conflict
+
+  - repo: https://github.com/psf/black
+    rev: 23.7.0
+    hooks:
+      - id: black
+        language_version: python3
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        args: ["--profile", "black"]
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 6.0.0
+    hooks:
+      - id: flake8
+        args: ["--max-line-length=88", "--extend-ignore=E203,W503"]
+
+---
+
+# docs/conf.py
+"""Sphinx configuration file for documentation."""
+
+import os
+import sys
+sys.path.insert(0, os.path.abspath('..'))
+
+# Project information
+project = 'Claude API Connector'
+copyright = '2025, Daniel Burton'
+author = 'Daniel Burton'
+release = '1.0.0'
+
+# Extensions
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.napoleon',
+    'sphinx.ext.intersphinx',
+]
+
+# Templates path
+templates_path = ['_templates']
+
+# Exclude patterns
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+
+# HTML theme
+html_theme = 'sphinx_rtd_theme'
+html_static_path = ['_static']
+
+# Napoleon settings
+napoleon_google_docstring = True
+napoleon_numpy_docstring = True
+
+# Intersphinx mapping
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3', None),
+    'aiohttp': ('https://docs.aiohttp.org/en/stable/', None),
+}
