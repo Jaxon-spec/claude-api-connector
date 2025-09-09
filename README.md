@@ -1,2 +1,399 @@
-# claude-api-connector
-Universal Python framework for connecting any REST API to Claude AI. Features async operations, batch processing, conversation management, and comprehensive error handling. Perfect for building intelligent API integrations.
+# README.md
+# Claude API Connector
+
+A flexible Python framework for connecting any API to Claude, enabling seamless integration and data exchange between Claude and external services.
+
+## Features
+
+- 🔌 **Universal API Connector**: Connect to any REST API with minimal configuration
+- 🤖 **Claude Integration**: Built-in Claude API client with conversation management
+- 🛡️ **Security First**: Secure API key management and request validation
+- 📊 **JSON/Text Support**: Primary support for JSON and text data with CSV/XML utilities
+- ⚡ **Async Support**: High-performance async operations
+- 🔄 **Error Handling**: Comprehensive error handling and retry logic
+- 📖 **Working Examples**: Ready-to-use examples for popular APIs
+
+## Installation
+
+### From Source
+
+```bash
+git clone https://github.com/theRealDanB/claude-api-connector.git
+cd claude-api-connector
+pip install -r requirements.txt
+pip install -e .
+```
+
+### Environment Setup
+
+Create a `.env` file:
+
+```env
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
+DEFAULT_TIMEOUT=30
+MAX_RETRIES=3
+LOG_LEVEL=INFO
+```
+
+## Quick Start
+
+```python
+import asyncio
+from claude_api_connector import ClaudeConnector, APIConfig
+
+async def main():
+    # Configure your external API
+    api_config = APIConfig(
+        base_url="https://api.example.com",
+        headers={"Authorization": "Bearer YOUR_API_KEY"},
+        timeout=30
+    )
+
+    # Initialize Claude connector
+    connector = ClaudeConnector(
+        anthropic_api_key="your-claude-api-key",
+        api_config=api_config
+    )
+
+    # Connect and query
+    result = await connector.query_with_api_data(
+        prompt="Analyze this weather data",
+        api_endpoint="/weather/current",
+        api_params={"city": "San Francisco"}
+    )
+
+    print(result["response"])
+    await connector.close()
+
+# Run the example
+asyncio.run(main())
+```
+
+## Working Examples
+
+### Test with Public API (No Keys Required)
+
+```python
+import asyncio
+from claude_api_connector import ClaudeConnector, APIConfig
+
+async def test_basic():
+    # JSONPlaceholder - free public API
+    config = APIConfig(base_url="https://jsonplaceholder.typicode.com")
+    connector = ClaudeConnector(api_config=config)
+    
+    result = await connector.query_with_api_data(
+        prompt="Tell me about this user's profile",
+        api_endpoint="/users/1"
+    )
+    
+    print(result["response"])
+    await connector.close()
+
+asyncio.run(test_basic())
+```
+
+### Weather API Integration
+
+```python
+from claude_api_connector import ClaudeConnector, APIConfig
+from claude_api_connector.core.config import AuthType
+
+async def weather_example():
+    weather_config = APIConfig(
+        base_url="https://api.openweathermap.org/data/2.5",
+        auth_type=AuthType.API_KEY,
+        auth_param="appid",
+        api_key="your_weather_api_key"
+    )
+    
+    connector = ClaudeConnector(api_config=weather_config)
+    
+    result = await connector.query_with_api_data(
+        prompt="What's the weather like? Any recommendations?",
+        api_endpoint="/weather",
+        api_params={"q": "London", "units": "metric"}
+    )
+    
+    print(result["response"])
+    await connector.close()
+```
+
+## Core Features
+
+### Batch Processing
+
+```python
+endpoints = [
+    {"endpoint": "/users", "params": {"active": True}},
+    {"endpoint": "/orders", "params": {"status": "completed"}},
+    {"endpoint": "/products", "params": {"category": "electronics"}}
+]
+
+result = await connector.batch_process(
+    endpoints=endpoints,
+    analysis_prompt="Provide a comprehensive business overview"
+)
+
+print(result["analysis"])
+```
+
+### Conversation Memory
+
+```python
+# First query - Claude remembers this context
+result1 = await connector.stream_conversation(
+    prompt="Analyze this sales data",
+    api_endpoint="/sales/monthly"
+)
+
+# Follow-up query - Claude maintains context
+result2 = await connector.stream_conversation(
+    prompt="Now compare it to last year",
+    api_endpoint="/sales/yearly"  
+)
+```
+
+### Custom Data Processing
+
+```python
+def custom_processor(api_response):
+    # Your custom data transformation logic
+    processed_data = transform_data(api_response)
+    return processed_data
+
+connector.set_data_processor(custom_processor)
+```
+
+## Supported APIs
+
+This connector works with any REST API, including:
+- **Weather**: OpenWeatherMap, AccuWeather
+- **Development**: GitHub, GitLab, Jira  
+- **Social Media**: Twitter, Reddit, LinkedIn
+- **E-commerce**: Shopify, WooCommerce, Stripe
+- **Cloud Services**: AWS, Google Cloud, Azure
+- **And many more...**
+
+## Testing
+
+Run the included test suite:
+
+```bash
+# Set your Claude API key
+export ANTHROPIC_API_KEY="your_key_here"
+
+# Run tests (uses public APIs, no additional keys needed)
+python main.py
+
+# Run specific tests  
+pytest tests/
+```
+
+## Error Handling
+
+```python
+from claude_api_connector.core.exceptions import (
+    APIConnectionError, 
+    ClaudeAPIError
+)
+
+try:
+    result = await connector.query_with_api_data(
+        prompt="Analyze this data",
+        api_endpoint="/data"
+    )
+except APIConnectionError as e:
+    print(f"API connection failed: {e}")
+except ClaudeAPIError as e:
+    print(f"Claude API error: {e}")
+```
+
+## Important Notes
+
+### Claude API Costs
+- Each query to Claude costs based on input/output tokens
+- Large datasets will increase costs
+- Consider data size limits and preprocessing
+
+### Rate Limits
+- Respects both external API and Claude rate limits
+- Built-in retry logic with exponential backoff
+- Configurable concurrent request limits
+
+### Data Size Considerations
+- Large API responses are automatically truncated for Claude
+- Implement custom processors for data summarization
+- Consider batch processing for multiple small requests vs. large single requests
+
+## Development
+
+```bash
+# Development setup
+git clone https://github.com/theRealDanB/claude-api-connector.git
+cd claude-api-connector
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements-dev.txt
+pip install -e .
+
+# Run tests
+pytest tests/
+
+# Format code
+black claude_api_connector/ tests/ examples/
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes and add tests
+4. Ensure tests pass (`pytest`)
+5. Format code (`black .`)
+6. Commit your changes (`git commit -m 'Add amazing feature'`)
+7. Push to the branch (`git push origin feature/amazing-feature`)
+8. Open a Pull Request
+
+## Troubleshooting
+
+### Common Issues
+
+1. **"No module named claude_api_connector"**
+   ```bash
+   pip install -e .
+   ```
+
+2. **"ANTHROPIC_API_KEY not found"**
+   ```bash
+   export ANTHROPIC_API_KEY="your_key_here"
+   # or create .env file
+   ```
+
+3. **API Authentication Errors**
+   - Verify your API keys are correct
+   - Check the API documentation for auth requirements
+   - Ensure proper AuthType (BEARER, API_KEY, etc.)
+
+4. **Rate Limit Errors**
+   - Increase delays between requests
+   - Reduce batch_process concurrent limit
+   - Check API provider rate limits
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Support
+
+- 🐛 [Issue Tracker](https://github.com/theRealDanB/claude-api-connector/issues)
+- 💬 [Discussions](https://github.com/theRealDanB/claude-api-connector/discussions)
+
+---
+
+**Built with ❤️ for seamless AI-API integration**
+
+---
+
+# setup.py
+"""Setup configuration for Claude API Connector."""
+
+from setuptools import setup, find_packages
+
+with open("README.md", "r", encoding="utf-8") as fh:
+    long_description = fh.read()
+
+with open("requirements.txt", "r", encoding="utf-8") as fh:
+    requirements = [line.strip() for line in fh if line.strip() and not line.startswith("#")]
+
+setup(
+    name="claude-api-connector",
+    version="1.0.0",
+    author="Daniel Burton",
+    author_email="danielburtonredondo@gmail.com",
+    description="Universal API connector for Claude AI integration",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/theRealDanB/claude-api-connector",
+    packages=find_packages(),
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    ],
+    python_requires=">=3.8",
+    install_requires=requirements,
+    extras_require={
+        "dev": [
+            "pytest>=7.0.0",
+            "pytest-asyncio>=0.21.0",
+            "pytest-cov>=4.0.0",
+            "black>=23.0.0",
+            "flake8>=6.0.0",
+            "mypy>=1.5.0",
+        ],
+        "docs": [
+            "sphinx>=7.0.0",
+            "sphinx-rtd-theme>=1.3.0",
+        ],
+    },
+    include_package_data=True,
+    zip_safe=False,
+)
+
+---
+
+# requirements.txt
+anthropic>=0.25.0,<1.0.0
+aiohttp>=3.9.0,<4.0.0
+python-dotenv>=1.0.0,<2.0.0
+pydantic>=2.0.0,<3.0.0
+
+---
+
+# requirements-dev.txt
+-r requirements.txt
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.0.0
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.5.0
+pre-commit>=3.0.0
+isort>=5.12.0
+sphinx>=7.0.0
+sphinx-rtd-theme>=1.3.0
+
+---
+
+# LICENSE
+MIT License
+
+Copyright (c) 2025 Daniel Burton
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
